@@ -44,12 +44,22 @@ CREATE LOGIN KPIAdmin
  WITH PASSWORD = 'KPIAdmin$123'
 GO
 
+
 CREATE USER KPIAdmin
  FOR LOGIN KPIAdmin
  WITH DEFAULT_SCHEMA = dbo
 GO
 EXEC sp_addrolemember N'db_owner', N'KPIAdmin'
 GO
+
+In secrets file in API side, copy this:
+
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=KPIs;User Id=KPIAdmin;Password=KPIAdmin$123;Integrated Security=False;MultipleActiveResultSets=True;TrustServerCertificate=True"
+  }
+}
+
 
 ### Build:
 application can be build easily is visual studio 2022.
