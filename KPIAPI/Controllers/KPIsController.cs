@@ -106,7 +106,7 @@ namespace KPIAPI.Controllers
         public async Task<ActionResult<ApiResult<KPI>>> PostKPI(KPI kPI)
         {
             //if new dep
-            if (DepExist(kPI.KPIIDNum) == false)
+            if (DepExist(kPI.DepNo) == false)
             {
                 Department department = new() { DepNo = kPI.DepNo };
                 _context.Departments.Add(department);

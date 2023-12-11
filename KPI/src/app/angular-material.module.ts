@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatProgressBarModule,
     FormsModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
   ],
   exports: [
     MatButtonModule,
@@ -27,7 +29,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatProgressBarModule,
     FormsModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
   ]
 })
 export class AngularMaterialModule { }
