@@ -37,6 +37,7 @@ export class AppComponent {
 
   loadKPIsForDep(depNo: any): void {
     if (depNo > 0) {
+      this.clearAll();
       this.depNum = depNo;
       this.bInProgress = true;
       // fetch the city from the server
