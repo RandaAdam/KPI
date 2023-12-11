@@ -1,14 +1,86 @@
+<h1>Survey System</h1>
+<h2>Key Performance Indicator</h2>
+<!--<p *ngIf="!KPIs">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</p>-->
+<div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-    </tbody>
+  <form novalidate autocomplete="off" #form="ngForm"
+        (ngSubmit)="loadKPIsForDep(depNo.value)">
+    <mat-form-field>
+      <mat-label>Department Number:</mat-label>
+      <input matInput type="number" #depNo required
+             placeholder="Department number..."
+             value="{{depNum?depNum:''}}">
+      <!--[(ngModel)]="depNum" #title="ngModel"-->
+    </mat-form-field>
+    
+    <button mat-stroked-button type="submit" name="btnSubmit"
+            [disabled]="form.invalid">
+      ...
+    </button>
+
+  </form>
+</div>
+
+<div>
+  <button mat-button (click)="addNewRow()" [disabled]="!depNo.value">
+    Add New Row
+  </button>
+</div>
+
+<table mat-table [dataSource]="KPIs"
+       class="mat-elevation-z8">
+  
+  <!-- KPI ID Num Column -->
+  <ng-container matColumnDef="kpiidnum">
+    <th mat-header-cell *matHeaderCellDef>KPI ID Num</th>
+    <td mat-cell readonly="false" *matCellDef="let kpi">
+      <input matInput type="number" [readonly]="false"
+             [(ngModel)]="kpi.KPIIDNum"
+             value="{{kpi.KPIIDNum?kpi.KPIIDNum:''}}">
+    </td>
+  </ng-container>
+
+  <!-- KPI Description Column -->
+  <ng-container matColumnDef="kpidescription">
+    <th mat-header-cell *matHeaderCellDef>KPI Description</th>
+    <td mat-cell readnly="false" *matCellDef="let kpi">
+      <input matInput type="text" [readonly]="false"
+             [(ngModel)]="kpi.KPIDescription"
+             value="{{kpi.KPIDescription?kpi.KPIDescription:''}}">
+    </td>
+  </ng-container>
+
+  <!-- Measurement Unit Column -->
+  <ng-container matColumnDef="measurementunit">
+    <th mat-header-cell *matHeaderCellDef>Measurement Unit</th>
+    <td mat-cell *matCellDef="let kpi">
+      <mat-radio-group required="true" [(ngModel)]="kpi.MeasurementUnit">
+        <mat-radio-button *ngFor="let op of measUnitOptions" [value]="op">
+          {{op}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </td>
+  </ng-container>
+
+  <!-- Targeted Value Column -->
+  <ng-container matColumnDef="targetedvalue">
+    <th mat-header-cell *matHeaderCellDef>Targeted Value</th>
+    <td mat-cell *matCellDef="let kpi">
+      <input matInput type="number" [readonly]="false"
+             [(ngModel)]="kpi.TargetedValue"
+             value="{{kpi.TargetedValue?kpi.TargetedValue:''}}">
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 </table>
+
+<div>
+  <button mat-raised-button name="btnNew" (click)="addNewKPIs()">New</button>
+  <button mat-raised-button name="btnDelete" (click)="DeleteKPIs()">Delete</button>
+  <button mat-raised-button name="btnSave" (click)="SaveKPIs()">Save</button>
+</div>

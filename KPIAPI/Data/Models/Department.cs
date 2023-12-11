@@ -8,6 +8,6 @@ namespace KPIAPI.Data.Models
     {
         public int DepNo { get; set; }
 
-        public required ICollection<KPI> KPIs { get; set; }
+        public ICollection<KPI>? KPIs { get; set; } = null;
     }
 }

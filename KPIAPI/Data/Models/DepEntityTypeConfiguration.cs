@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace KPIAPI.Data.Models
 {
@@ -11,6 +12,9 @@ namespace KPIAPI.Data.Models
             builder.ToTable("TblDepartmants");
             builder.HasKey(x => x.DepNo);
             builder.Property(x => x.DepNo).IsRequired();
+            builder
+                .Property(e => e.DepNo)
+                .ValueGeneratedNever();
         }
     }
 }

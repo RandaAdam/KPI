@@ -23,9 +23,12 @@ namespace KPIAPI.Controllers
 
         // GET: api/KPIs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KPI>>> GetKPIs()
+        public async Task<ActionResult<ApiResult<KPI>>> GetKPIs()
         {
-            return await _context.KPIs.ToListAsync();
+            //note using AsNoTracking to perform a read-only task
+            return await ApiResult<KPI>.CreateAsync(
+                _context.KPIs.AsNoTracking()
+                );
         }
 
         // GET: api/KPIs/5
@@ -42,10 +45,30 @@ namespace KPIAPI.Controllers
             return kPI;
         }
 
+        // GET: api/KPIs/GetKPIsInDepartment/4
+        [HttpGet("GetKPIsInDepartment/{depNo}")]
+        public async Task<ActionResult<ApiResult<KPI>>> GetKPIsInDepartment(int depNo)
+        {
+            ActionResult<ApiResult<KPI>> KPIsInDepartment = 
+                await ApiResult<KPI>.CreateAsync(
+                    _context.KPIs
+                    .Where(kpi => kpi.DepNo == depNo)
+                    .AsNoTracking()
+                    );
+
+
+            if (KPIsInDepartment.Value?.Data.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return KPIsInDepartment;
+        }
+
         // PUT: api/KPIs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutKPI(int id, KPI kPI)
+        public async Task<ActionResult<ApiResult<KPI>>> PutKPI(int id, KPI kPI)
         {
             if (id != kPI.KPIIDNum)
             {
@@ -70,18 +93,32 @@ namespace KPIAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return await ApiResult<KPI>.CreateAsync(
+                    _context.KPIs
+                    .Where(kpi => kpi.KPIIDNum == kPI.KPIIDNum)
+                    .AsNoTracking()
+                    );
         }
 
         // POST: api/KPIs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<KPI>> PostKPI(KPI kPI)
+        public async Task<ActionResult<ApiResult<KPI>>> PostKPI(KPI kPI)
         {
+            //if new dep
+            if (DepExist(kPI.KPIIDNum) == false)
+            {
+                Department department = new() { DepNo = kPI.DepNo };
+                _context.Departments.Add(department);
+            }
             _context.KPIs.Add(kPI);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetKPI", new { id = kPI.KPIIDNum }, kPI);
+            return await ApiResult<KPI>.CreateAsync(
+                    _context.KPIs
+                    .Where(kpi => kpi.KPIIDNum == kPI.KPIIDNum)
+                    .AsNoTracking()
+                    );
         }
 
         // DELETE: api/KPIs/5
@@ -103,6 +140,11 @@ namespace KPIAPI.Controllers
         private bool KPIExists(int id)
         {
             return _context.KPIs.Any(e => e.KPIIDNum == id);
+        }
+
+        private bool DepExist(int depId)
+        {
+            return _context.Departments.Any(e => e.DepNo == depId);
         }
     }
 }

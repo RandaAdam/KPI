@@ -17,6 +17,6 @@ namespace KPIAPI.Data.Models
 
         public int DepNo { get; set; }
 
-        public required Department Dep { get; set; }
+        public Department? Dep { get; set; }=null;
     }
 }
